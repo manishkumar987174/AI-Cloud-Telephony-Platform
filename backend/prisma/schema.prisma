@@ -1,0 +1,192 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  super_admin
+  admin
+  agent
+}
+
+enum Plan {
+  free
+  starter
+  pro
+  enterprise
+}
+
+enum TransactionType {
+  credit
+  debit
+}
+
+enum CampaignStatus {
+  running
+  paused
+  stopped
+}
+
+enum ContactStatus {
+  pending
+  called
+  failed
+}
+
+enum CallStatus {
+  answered
+  failed
+  busy
+  no_answer
+}
+
+enum CallDirection {
+  inbound
+  outbound
+}
+
+model Company {
+  id               BigInt        @id @default(autoincrement())
+  name             String        @db.VarChar(100)
+  plan             Plan          @default(free)
+  walletBalance    Decimal       @default(0.00) @map("wallet") @db.Decimal(10, 2)
+  isActive         Boolean       @default(true) @map("is_active")
+  ratePerMinute    Decimal       @default(1.00) @map("rate_per_minute") @db.Decimal(10, 2)
+  maxAgents        Int           @default(10) @map("max_agents")
+  maxConcurrent    Int           @default(5) @map("max_concurrent")
+  recordingEnabled Boolean       @default(true) @map("recording_enabled")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  
+  users            User[]
+  wallets          Wallet[]
+  transactions     Transaction[]
+  campaigns        Campaign[]
+  contacts         Contact[]
+  callLogs         CallLog[]
+
+  @@map("companies")
+}
+
+model Wallet {
+  id         BigInt   @id @default(autoincrement())
+  companyId  BigInt   @unique @map("company_id")
+  balance    Decimal  @default(0.00) @db.Decimal(10, 2)
+  currency   String   @default("INR") @db.VarChar(10)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("wallets")
+}
+
+model Transaction {
+  id          BigInt          @id @default(autoincrement())
+  companyId   BigInt          @map("company_id")
+  type        TransactionType
+  amount      Decimal         @db.Decimal(10, 2)
+  description String?         @db.Text
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model User {
+  id          BigInt       @id @default(autoincrement())
+  companyId   BigInt       @map("company_id")
+  name        String       @db.VarChar(100)
+  email       String       @unique @db.VarChar(150)
+  password    String       @db.VarChar(255)
+  role        Role         @default(agent)
+  isActive    Boolean      @default(true) @map("is_active")
+  extension   String?      @db.VarChar(50)
+  sipPassword String?      @map("sip_password") @db.VarChar(255)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agentStatus AgentStatus?
+
+  @@map("users")
+}
+
+model Campaign {
+  id        BigInt         @id @default(autoincrement())
+  companyId BigInt         @map("company_id")
+  name      String         @db.VarChar(100)
+  status    CampaignStatus @default(stopped)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contacts  Contact[]
+
+  @@map("campaigns")
+}
+
+model Contact {
+  id           BigInt        @id @default(autoincrement())
+  companyId    BigInt        @map("company_id")
+  campaignId   BigInt?       @map("campaign_id")
+  name         String        @db.VarChar(100)
+  phone        String        @db.VarChar(50)
+  city         String?       @db.VarChar(100)
+  state        String?       @db.VarChar(100)
+  customFields String?       @map("custom_fields") @db.Text
+  status       ContactStatus @default(pending)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign     Campaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  @@index([campaignId], map: "idx_campaign")
+  @@map("contacts")
+}
+
+model CallLog {
+  id           BigInt        @id @default(autoincrement())
+  companyId    BigInt        @map("company_id")
+  phone        String        @db.VarChar(50)
+  status       CallStatus    @default(no_answer)
+  duration     Int           @default(0)
+  direction    CallDirection @default(outbound)
+  createdAt    DateTime      @default(now()) @map("created_at")
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  recordings   Recording[]
+
+  @@index([phone], map: "idx_phone")
+  @@index([companyId], map: "idx_company_calls")
+  @@map("call_logs")
+}
+
+model Recording {
+  id           BigInt   @id @default(autoincrement())
+  callLogId    BigInt   @map("call_log_id")
+  recordingUrl String   @map("recording_url") @db.Text
+  duration     Int      @default(0)
+  transcript   String?  @db.LongText
+
+  callLog      CallLog  @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+
+  @@map("recordings")
+}
+
+model AgentStatus {
+  id        BigInt   @id @default(autoincrement())
+  agentId   BigInt   @unique @map("agent_id")
+  status    String   @db.VarChar(50)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  agent     User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@map("agent_status")
+}

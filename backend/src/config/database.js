@@ -1,15 +1,30 @@
-const mongoose = require('mongoose');
+const { PrismaClient } = require('@prisma/client');
 const logger = require('../utils/logger');
+
+const prisma = new PrismaClient({
+  log: [
+    { level: 'query', emit: 'event' },
+    { level: 'info', emit: 'stdout' },
+    { level: 'warn', emit: 'stdout' },
+    { level: 'error', emit: 'stdout' },
+  ],
+});
+
+// Log queries in development mode
+if (process.env.NODE_ENV === 'development') {
+  prisma.$on('query', (e) => {
+    logger.info(`Query: ${e.query} -- Params: ${e.params}`);
+  });
+}
 
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ai-telephony';
-    const conn = await mongoose.connect(mongoURI);
-    logger.info(`MongoDB Connected: ${conn.connection.host}`);
+    await prisma.$connect();
+    logger.info('MySQL Database Connected successfully (Prisma)');
   } catch (error) {
-    logger.error(`Database connection error: ${error.message}`);
+    logger.error(`MySQL connection error: ${error.message}`);
     process.exit(1);
   }
 };
 
-module.exports = { connectDB };
+module.exports = { prisma, connectDB };

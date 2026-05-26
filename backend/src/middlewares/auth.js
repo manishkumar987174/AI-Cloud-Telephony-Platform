@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { prisma } = require('../config/database');
 const logger = require('../utils/logger');
 
 const authenticate = async (req, res, next) => {
@@ -19,7 +19,10 @@ const authenticate = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this');
 
-    const user = await User.findById(decoded.id).select('+password');
+    const user = await prisma.user.findUnique({
+      where: { id: BigInt(decoded.id) }
+    });
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -33,6 +36,9 @@ const authenticate = async (req, res, next) => {
         error: { message: 'This user account is suspended' }
       });
     }
+
+    // Hide password hash
+    delete user.password;
 
     req.user = user;
     next();

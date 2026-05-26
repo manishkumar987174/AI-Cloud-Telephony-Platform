@@ -1,4 +1,4 @@
-﻿version: '3.9'
+version: '3.9'
 
 services:
   frontend:
@@ -17,18 +17,21 @@ services:
     env_file:
       - ./backend/.env
     depends_on:
-      - mongodb
+      - mysql
       - redis
       - rabbitmq
     networks:
       - app-network
 
-  mongodb:
-    image: mongo:7
+  mysql:
+    image: mysql:8
     ports:
-      - "27017:27017"
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: telephony
     volumes:
-      - mongo-data:/data/db
+      - mysql-data:/var/lib/mysql
     networks:
       - app-network
 
@@ -66,7 +69,7 @@ services:
       - app-network
 
 volumes:
-  mongo-data:
+  mysql-data:
 
 networks:
   app-network:

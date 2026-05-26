@@ -1,4 +1,9 @@
-﻿const express = require('express')
+// BigInt JSON serialization override for Prisma support
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
+const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')

@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const Company = require('../models/Company');
-const Wallet = require('../models/Wallet');
+const bcrypt = require('bcryptjs');
+const { prisma } = require('../config/database');
 const logger = require('../utils/logger');
 
 // Generate JWT Helper
 const generateToken = (userId) => {
   return jwt.sign(
-    { id: userId },
+    { id: userId.toString() }, // Convert BigInt to string for signing
     process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this',
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
@@ -25,7 +24,10 @@ exports.register = async (req, res, next) => {
     }
 
     // Check if user already exists
-    const userExists = await User.findOne({ email });
+    const userExists = await prisma.user.findUnique({
+      where: { email }
+    });
+    
     if (userExists) {
       return res.status(400).json({
         success: false,
@@ -33,42 +35,56 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // 1. Create the company
-    const company = await Company.create({
-      name: companyName,
-      plan: 'free',
-      wallet: 0 // starting balance in company settings
+    // Execute transactional signup
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Create the company
+      const company = await tx.company.create({
+        data: {
+          name: companyName,
+          plan: 'free',
+          walletBalance: 0.00
+        }
+      });
+
+      // 2. Create the company wallet
+      await tx.wallet.create({
+        data: {
+          companyId: company.id,
+          balance: 100.00 // Promotional credit
+        }
+      });
+
+      // 3. Hash the password
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      // 4. Create the administrator user
+      const user = await tx.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          companyId: company.id,
+          role: 'admin',
+          isActive: true
+        }
+      });
+
+      return { user, company };
     });
 
-    // 2. Create the company wallet
-    await Wallet.create({
-      companyId: company._id,
-      balance: 100 // Give 100 free credits upon signup
-    });
+    // Remove password hash from response
+    delete result.user.password;
 
-    // 3. Create the administrator user
-    const user = await User.create({
-      name,
-      email,
-      password,
-      companyId: company._id,
-      role: 'admin',
-      isActive: true
-    });
+    const token = generateToken(result.user.id);
 
-    // Remove password from output
-    user.password = undefined;
-
-    const token = generateToken(user._id);
-
-    logger.info(`New user registered: ${email} for company ${companyName}`);
+    logger.info(`New user registered via MySQL/Prisma: ${email} for company ${companyName}`);
 
     res.status(201).json({
       success: true,
       token,
       data: {
-        user,
-        company
+        user: result.user,
+        company: result.company
       }
     });
   } catch (error) {
@@ -88,8 +104,11 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Find user and include password field
-    const user = await User.findOne({ email }).select('+password');
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -97,8 +116,8 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Check if password matches
-    const isMatch = await user.comparePassword(password);
+    // Check if password matches (bcrypt comparison since models don't auto-compare anymore)
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -115,14 +134,16 @@ exports.login = async (req, res, next) => {
     }
 
     // Fetch company info
-    const company = await Company.findById(user.companyId);
+    const company = await prisma.company.findUnique({
+      where: { id: user.companyId }
+    });
 
-    // Remove password
-    user.password = undefined;
+    // Remove password hash
+    delete user.password;
 
-    const token = generateToken(user._id);
+    const token = generateToken(user.id);
 
-    logger.info(`User logged in: ${email}`);
+    logger.info(`User logged in via MySQL/Prisma: ${email}`);
 
     res.status(200).json({
       success: true,
@@ -140,7 +161,17 @@ exports.login = async (req, res, next) => {
 
 exports.getCurrentUser = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id).populate('companyId');
+    const user = await prisma.user.findUnique({
+      where: { id: BigInt(req.user.id) },
+      include: {
+        company: true
+      }
+    });
+
+    if (user) {
+      delete user.password;
+    }
+
     res.status(200).json({
       success: true,
       data: user
@@ -151,7 +182,6 @@ exports.getCurrentUser = async (req, res, next) => {
   }
 };
 
-// Fallback method required by boilerplate
 exports.getAll = async (req, res, next) => {
   try {
     res.json({ success: true, data: [] });
