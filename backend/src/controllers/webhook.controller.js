@@ -1,9 +1,10 @@
-// webhook controller stub
+// webhook controller
+// TODO: Implement controller methods
 
-exports.getAll = async (req, res, next) => {
+export const getAll = async (req, res, next) => {
   try {
-    res.json({ success: true, data: [] });
+    res.json({ success: true, data: [] })
   } catch (error) {
-    next(error);
+    next(error)
   }
 };

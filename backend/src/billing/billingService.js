@@ -1,5 +1,5 @@
-const { prisma } = require('../config/database');
-const logger = require('../utils/logger');
+import { prisma } from '../config/database.js';
+import logger from '../utils/logger.js';
 
 async function debitCall(companyId, callId, durationSeconds, ratePerMinute) {
   const billableMinutes = Math.ceil(durationSeconds / 60);
@@ -68,4 +68,4 @@ async function creditWallet(companyId, amount, reference) {
   return { balance: result.balance };
 }
 
-module.exports = { debitCall, creditWallet };
+export { debitCall, creditWallet };

@@ -1,32 +1,32 @@
-const { Router } = require('express')
-const authRoutes = require('./auth.routes')
-const userRoutes = require('./user.routes')
-const campaignRoutes = require('./campaign.routes')
-const contactRoutes = require('./contact.routes')
-const callRoutes = require('./call.routes')
-const recordingRoutes = require('./recording.routes')
-const ivrRoutes = require('./ivr.routes')
-const billingRoutes = require('./billing.routes')
-const analyticsRoutes = require('./analytics.routes')
-const agentRoutes = require('./agent.routes')
-const webhookRoutes = require('./webhook.routes')
-const databaseRoutes = require('./database.routes')
+import { Router } from 'express';
+import authRoutes from './auth.routes.js';
+import userRoutes from './user.routes.js';
+import campaignRoutes from './campaign.routes.js';
+import contactRoutes from './contact.routes.js';
+import callRoutes from './call.routes.js';
+import recordingRoutes from './recording.routes.js';
+import ivrRoutes from './ivr.routes.js';
+import billingRoutes from './billing.routes.js';
+import analyticsRoutes from './analytics.routes.js';
+import agentRoutes from './agent.routes.js';
+import webhookRoutes from './webhook.routes.js';
+import databaseRoutes from './database.routes.js';
 
-const router = Router()
+const router = Router();
 
-router.use('/auth', authRoutes)
-router.use('/users', userRoutes)
-router.use('/campaigns', campaignRoutes)
-router.use('/contacts', contactRoutes)
-router.use('/calls', callRoutes)
-router.use('/recordings', recordingRoutes)
-router.use('/ivr', ivrRoutes)
-router.use('/billing', billingRoutes)
-router.use('/analytics', analyticsRoutes)
-router.use('/agents', agentRoutes)
-router.use('/webhooks', webhookRoutes)
-router.use('/database', databaseRoutes)
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+router.use('/campaigns', campaignRoutes);
+router.use('/contacts', contactRoutes);
+router.use('/calls', callRoutes);
+router.use('/recordings', recordingRoutes);
+router.use('/ivr', ivrRoutes);
+router.use('/billing', billingRoutes);
+router.use('/analytics', analyticsRoutes);
+router.use('/agents', agentRoutes);
+router.use('/webhooks', webhookRoutes);
+router.use('/database', databaseRoutes);
 
-router.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }))
+router.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
-module.exports = router
+export default router;

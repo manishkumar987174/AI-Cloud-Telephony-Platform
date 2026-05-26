@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const { getDatabaseDiagnostics, seedDatabase } = require('../controllers/database.controller');
+import { Router } from 'express';
+import { getDatabaseDiagnostics, seedDatabase } from '../controllers/database.controller.js';
 
 const router = Router();
 
@@ -9,4 +9,4 @@ router.get('/diagnostics', getDatabaseDiagnostics);
 // Seed database programmatically for local development testing
 router.post('/seed', seedDatabase);
 
-module.exports = router;
+export default router;

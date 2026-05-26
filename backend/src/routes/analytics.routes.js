@@ -1,10 +1,10 @@
-﻿const { Router } = require('express')
-const controller = require('../controllers/analytics.controller')
-const { authenticate } = require('../middlewares/auth')
+import { Router } from 'express';
+import * as controller from '../controllers/analytics.controller.js';
+import { authenticate } from '../middlewares/auth.js';
 
-const router = Router()
+const router = Router();
 
 // TODO: Add analytics routes
 // router.get('/', authenticate, controller.getAll)
 
-module.exports = router
+export default router;

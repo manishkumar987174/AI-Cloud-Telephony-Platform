@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const { prisma } = require('../config/database');
-const logger = require('../utils/logger');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import { prisma } from '../config/database.js';
+import logger from '../utils/logger.js';
 
 // Generate JWT Helper
 const generateToken = (userId) => {
@@ -12,7 +12,7 @@ const generateToken = (userId) => {
   );
 };
 
-exports.register = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const { name, email, password, companyName } = req.body;
 
@@ -93,7 +93,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -159,7 +159,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.getCurrentUser = async (req, res, next) => {
+export const getCurrentUser = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: BigInt(req.user.id) },
@@ -182,7 +182,7 @@ exports.getCurrentUser = async (req, res, next) => {
   }
 };
 
-exports.getAll = async (req, res, next) => {
+export const getAll = async (req, res, next) => {
   try {
     res.json({ success: true, data: [] });
   } catch (error) {

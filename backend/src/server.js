@@ -1,24 +1,24 @@
-require('dotenv').config()
-const app = require('./app')
-const { connectDB } = require('./config/database')
-const { connectRedis } = require('./config/redis')
-const { initSocket } = require('./socket')
-const { initESL } = require('./telephony/esl/eslClient')
-const logger = require('./utils/logger')
+import 'dotenv/config';
+import app from './app.js';
+import { connectDB } from './config/database.js';
+import { connectRedis } from './config/redis.js';
+import { initSocket } from './socket/index.js';
+import { initESL } from './telephony/esl/eslClient.js';
+import logger from './utils/logger.js';
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
 async function start() {
-  await connectDB()
-  await connectRedis()
+  await connectDB();
+  await connectRedis();
   const server = app.listen(PORT, () => {
-    logger.info(`Server running on port ${PORT}`)
-  })
-  initSocket(server)
-  initESL()
+    logger.info(`Server running on port ${PORT}`);
+  });
+  initSocket(server);
+  initESL();
 }
 
 start().catch((err) => {
-  logger.error('Startup error:', err)
-  process.exit(1)
-})
+  logger.error('Startup error:', err);
+  process.exit(1);
+});

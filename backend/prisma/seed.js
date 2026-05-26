@@ -1,14 +1,14 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 // Create a default instance for CLI direct seeding
 const defaultPrisma = new PrismaClient();
 
 async function runSeed(prismaInstance = defaultPrisma) {
-  console.log('🌱 Starting database seeding with humanized mock data...');
+  console.log('Starting database seeding with humanized mock data...');
 
   // Clear existing records to ensure clean slate
-  console.log('🧹 Clearing existing database tables...');
+  console.log('Clearing existing database tables...');
   await prismaInstance.transaction.deleteMany({});
   await prismaInstance.wallet.deleteMany({});
   await prismaInstance.recording.deleteMany({});
@@ -19,7 +19,7 @@ async function runSeed(prismaInstance = defaultPrisma) {
   await prismaInstance.user.deleteMany({});
   await prismaInstance.company.deleteMany({});
 
-  console.log('🏢 Creating companies...');
+  console.log('Creating companies...');
   // 1. Create Companies
   const companyApex = await prismaInstance.company.create({
     data: {
@@ -43,7 +43,7 @@ async function runSeed(prismaInstance = defaultPrisma) {
     }
   });
 
-  console.log('💳 Initializing company wallets...');
+  console.log('Initializing company wallets...');
   // 2. Create Wallets
   await prismaInstance.wallet.create({
     data: {
@@ -115,7 +115,7 @@ async function runSeed(prismaInstance = defaultPrisma) {
     }
   });
 
-  console.log('🤖 Creating agent statuses...');
+  console.log('Creating agent statuses...');
   // Agent Statuses
   await prismaInstance.agentStatus.create({
     data: {
@@ -356,15 +356,17 @@ async function runSeed(prismaInstance = defaultPrisma) {
     }
   });
 
-  console.log('✅ Database seeded successfully with humanized mock records!');
+  console.log('Database seeded successfully with humanized mock records!');
   return { success: true, message: 'Database successfully seeded with Apex Solutions and CloudCorp data.' };
 }
 
-// Execution guard for direct CLI call (npx prisma db seed)
-if (require.main === module) {
+import { fileURLToPath } from 'url';
+
+const isMain = process.argv[1] && (process.argv[1] === fileURLToPath(import.meta.url) || process.argv[1].endsWith('seed.js'));
+if (isMain) {
   runSeed()
     .catch((e) => {
-      console.error('❌ Error seeding database:', e);
+      console.error('Error seeding database:', e);
       process.exit(1);
     })
     .finally(async () => {
@@ -372,4 +374,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { runSeed };
+export { runSeed };

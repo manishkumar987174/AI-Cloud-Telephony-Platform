@@ -1,5 +1,5 @@
-const { createClient } = require('redis');
-const logger = require('../utils/logger');
+import { createClient } from 'redis';
+import logger from '../utils/logger.js';
 
 let redisClient = null;
 
@@ -23,4 +23,4 @@ const connectRedis = async () => {
 
 const getRedisClient = () => redisClient;
 
-module.exports = { connectRedis, getRedisClient };
+export { connectRedis, getRedisClient };

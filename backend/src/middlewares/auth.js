@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const { prisma } = require('../config/database');
-const logger = require('../utils/logger');
+import jwt from 'jsonwebtoken';
+import { prisma } from '../config/database.js';
+import logger from '../utils/logger.js';
 
 const authenticate = async (req, res, next) => {
   try {
@@ -63,4 +63,4 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { authenticate, authorize };
+export { authenticate, authorize };

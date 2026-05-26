@@ -1,14 +1,14 @@
-const { prisma } = require('../config/database');
-const { humanizeDatabaseRecord } = require('../utils/databaseHelper');
-const { runSeed } = require('../../prisma/seed');
-const logger = require('../utils/logger');
+import { prisma } from '../config/database.js';
+import { humanizeDatabaseRecord } from '../utils/databaseHelper.js';
+import { runSeed } from '../../prisma/seed.js';
+import logger from '../utils/logger.js';
 
 /**
  * getDatabaseDiagnostics
  * Runs diagnostics on the MySQL database and retrieves statistics
  * about Phase 2 tables, relationships, and SaaS tenant counts.
  */
-exports.getDatabaseDiagnostics = async (req, res, next) => {
+export const getDatabaseDiagnostics = async (req, res, next) => {
   try {
     const startTime = Date.now();
     
@@ -100,7 +100,7 @@ exports.getDatabaseDiagnostics = async (req, res, next) => {
  * Programmatically triggers the database seeder to repopulate the tables
  * with realistic humanized mock records.
  */
-exports.seedDatabase = async (req, res, next) => {
+export const seedDatabase = async (req, res, next) => {
   try {
     logger.info('Programmatic database seeding triggered via API');
     

@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const controller = require('../controllers/auth.controller');
-const { authenticate } = require('../middlewares/auth');
+import { Router } from 'express';
+import * as controller from '../controllers/auth.controller.js';
+import { authenticate } from '../middlewares/auth.js';
 
 const router = Router();
 
@@ -11,4 +11,4 @@ router.get('/me', authenticate, controller.getCurrentUser);
 // Fallback compatibility route
 router.get('/', authenticate, controller.getAll);
 
-module.exports = router;
+export default router;

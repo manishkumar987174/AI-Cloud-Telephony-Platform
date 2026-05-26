@@ -5,7 +5,7 @@ Welcome, Manish! This guide summarizes the complete **Phase 2 (MySQL Database De
 
 ---
 
-## 🚀 What Has Been Done (Phase 2 Completed)
+##  What Has Been Done (Phase 2 Completed)
 
 1. **Relational Database Design**:
    - Refined the Prisma ORM models inside `schema.prisma`.
@@ -31,42 +31,42 @@ Welcome, Manish! This guide summarizes the complete **Phase 2 (MySQL Database De
 
 ---
 
-## 📂 File Directory (Created & Modified Files)
+##  File Directory (Created & Modified Files)
 
 Below is the exact list of all files that have been created or modified in the workspace during Phase 2:
 
-### 🆕 Created Files (New)
-1. 📁 **[backend/.env](file:///E:/AI-Cloud-Telephony-Platform/backend/.env)**
+###  Created Files (New)
+1.  **[backend/.env](file:///E:/AI-Cloud-Telephony-Platform/backend/.env)**
    - Backend development environment file containing database connections, ports, and external service placeholders.
-2. 📁 **[backend/src/utils/databaseHelper.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/utils/databaseHelper.js)**
+2.  **[backend/src/utils/databaseHelper.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/utils/databaseHelper.js)**
    - Helper utils for humanizing BigInts in API responses, wrapping transactions, and enforcing tenant isolation.
-3. 📁 **[backend/src/controllers/database.controller.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/controllers/database.controller.js)**
+3.  **[backend/src/controllers/database.controller.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/controllers/database.controller.js)**
    - Express controller for retrieving MySQL connection health, counting table rows, and programmatic seeding.
-4. 📁 **[backend/src/routes/database.routes.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/routes/database.routes.js)**
+4.  **[backend/src/routes/database.routes.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/routes/database.routes.js)**
    - Defines endpoints `/diagnostics` and `/seed` for database administration.
-5. 📁 **[frontend/src/pages/DatabaseDiagnostics.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/pages/DatabaseDiagnostics.jsx)**
+5.  **[frontend/src/pages/DatabaseDiagnostics.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/pages/DatabaseDiagnostics.jsx)**
    - Premium developer UI displaying active MySQL health, latency, table metrics, and interactive seeding actions in a gorgeous slate-indigo glassmorphic theme.
 
-### 🛠️ Modified Files (Updated)
-1. 📁 **[backend/prisma/schema.prisma](file:///E:/AI-Cloud-Telephony-Platform/backend/prisma/schema.prisma)**
+###  Modified Files (Updated)
+1.  **[backend/prisma/schema.prisma](file:///E:/AI-Cloud-Telephony-Platform/backend/prisma/schema.prisma)**
    - Re-architected with relational connections for calls, agents, campaigns, cascade deletions, and database performance indexes.
-2. 📁 **[backend/prisma/seed.js](file:///E:/AI-Cloud-Telephony-Platform/backend/prisma/seed.js)**
+2.  **[backend/prisma/seed.js](file:///E:/AI-Cloud-Telephony-Platform/backend/prisma/seed.js)**
    - Extended with humanized seeding functions so it can be called both programmatically and via CLI.
-3. 📁 **[backend/package.json](file:///E:/AI-Cloud-Telephony-Platform/backend/package.json)**
+3.  **[backend/package.json](file:///E:/AI-Cloud-Telephony-Platform/backend/package.json)**
    - Added npm runner scripts `prisma:validate` and `prisma:generate` to run with target local packages, and registered prisma CLI seeds targets.
-4. 📁 **[backend/src/routes/index.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/routes/index.js)**
+4.  **[backend/src/routes/index.js](file:///E:/AI-Cloud-Telephony-Platform/backend/src/routes/index.js)**
    - Registered `/api/database` prefix routing tables.
-5. 📁 **[frontend/src/App.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/App.jsx)**
+5.  **[frontend/src/App.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/App.jsx)**
    - Added the `/database-diagnostics` route inside the main PrivateRoute layout.
-6. 📁 **[frontend/src/components/ui/Sidebar.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/components/ui/Sidebar.jsx)**
+6.  **[frontend/src/components/ui/Sidebar.jsx](file:///E:/AI-Cloud-Telephony-Platform/frontend/src/components/ui/Sidebar.jsx)**
    - Added the **"DB Health"** navigation option linked with database diagnostics path.
 
 ---
 
-## ⚙️ What You Need to Update in the `.env` File
+##  What You Need to Update in the `.env` File
 
 Before running migrations, you need to open your local backend environment configuration file:
-👉 **[backend/.env](file:///E:/AI-Cloud-Telephony-Platform/backend/.env)**
+ **[backend/.env](file:///E:/AI-Cloud-Telephony-Platform/backend/.env)**
 
 Look at line **8** inside the file:
 ```env
@@ -80,7 +80,7 @@ Please update the database connection string with your local MySQL credentials:
 
 ---
 
-## ⚡ Commands to Finalize & Start the Platform
+##  Commands to Finalize & Start the Platform
 
 Once you have updated the `.env` file, open your terminal in the `backend/` directory and execute these simple commands to finalize your MySQL tables and seed data:
 

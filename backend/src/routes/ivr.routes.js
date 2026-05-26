@@ -1,10 +1,10 @@
-﻿const { Router } = require('express')
-const controller = require('../controllers/ivr.controller')
-const { authenticate } = require('../middlewares/auth')
+import { Router } from 'express';
+import * as controller from '../controllers/ivr.controller.js';
+import { authenticate } from '../middlewares/auth.js';
 
-const router = Router()
+const router = Router();
 
 // TODO: Add ivr routes
 // router.get('/', authenticate, controller.getAll)
 
-module.exports = router
+export default router;

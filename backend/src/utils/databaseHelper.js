@@ -1,5 +1,5 @@
-const { prisma } = require('../config/database');
-const logger = require('./logger');
+import { prisma } from '../config/database.js';
+import logger from './logger.js';
 
 /**
  * humanizeDatabaseRecord
@@ -69,7 +69,7 @@ function enforceCompanyIsolation(queryConditions, companyId) {
   };
 }
 
-module.exports = {
+export {
   humanizeDatabaseRecord,
   runSecureTransaction,
   enforceCompanyIsolation
