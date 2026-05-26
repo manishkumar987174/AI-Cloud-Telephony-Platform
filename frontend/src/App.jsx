@@ -1,4 +1,4 @@
-﻿import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/Login'
@@ -13,6 +13,7 @@ import Settings from './pages/Settings'
 import IVR from './pages/IVR'
 import Contacts from './pages/Contacts'
 import Agents from './pages/Agents'
+import DatabaseDiagnostics from './pages/DatabaseDiagnostics'
 import PrivateRoute from './components/ui/PrivateRoute'
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
         <Route path='/reports' element={<Reports />} />
         <Route path='/billing' element={<Billing />} />
         <Route path='/settings' element={<Settings />} />
+        <Route path='/database-diagnostics' element={<DatabaseDiagnostics />} />
       </Route>
     </Routes>
   )

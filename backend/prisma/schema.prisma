@@ -68,6 +68,7 @@ model Company {
   campaigns        Campaign[]
   contacts         Contact[]
   callLogs         CallLog[]
+  recordings       Recording[]
 
   @@map("companies")
 }
@@ -113,6 +114,7 @@ model User {
 
   company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
   agentStatus AgentStatus?
+  callLogs    CallLog[]
 
   @@map("users")
 }
@@ -127,6 +129,7 @@ model Campaign {
 
   company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   contacts  Contact[]
+  callLogs  CallLog[]
 
   @@map("campaigns")
 }
@@ -154,27 +157,37 @@ model Contact {
 model CallLog {
   id           BigInt        @id @default(autoincrement())
   companyId    BigInt        @map("company_id")
-  phone        String        @db.VarChar(50)
+  campaignId   BigInt?       @map("campaign_id")
+  agentId      BigInt?       @map("agent_id")
+  phoneNumber  String        @map("phone_number") @db.VarChar(20)
   status       CallStatus    @default(no_answer)
   duration     Int           @default(0)
+  recordingUrl String?       @map("recording_url") @db.Text
   direction    CallDirection @default(outbound)
+  startedAt    DateTime?     @map("started_at")
+  endedAt      DateTime?     @map("ended_at")
   createdAt    DateTime      @default(now()) @map("created_at")
 
   company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaign     Campaign?     @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  agent        User?         @relation(fields: [agentId], references: [id], onDelete: SetNull)
   recordings   Recording[]
 
-  @@index([phone], map: "idx_phone")
+  @@index([phoneNumber], map: "idx_phone")
   @@index([companyId], map: "idx_company_calls")
   @@map("call_logs")
 }
 
 model Recording {
   id           BigInt   @id @default(autoincrement())
+  companyId    BigInt   @map("company_id")
   callLogId    BigInt   @map("call_log_id")
   recordingUrl String   @map("recording_url") @db.Text
   duration     Int      @default(0)
   transcript   String?  @db.LongText
+  createdAt    DateTime @default(now()) @map("created_at")
 
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   callLog      CallLog  @relation(fields: [callLogId], references: [id], onDelete: Cascade)
 
   @@map("recordings")

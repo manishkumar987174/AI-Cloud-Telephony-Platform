@@ -1,4 +1,4 @@
-﻿const { Router } = require('express')
+const { Router } = require('express')
 const authRoutes = require('./auth.routes')
 const userRoutes = require('./user.routes')
 const campaignRoutes = require('./campaign.routes')
@@ -10,6 +10,7 @@ const billingRoutes = require('./billing.routes')
 const analyticsRoutes = require('./analytics.routes')
 const agentRoutes = require('./agent.routes')
 const webhookRoutes = require('./webhook.routes')
+const databaseRoutes = require('./database.routes')
 
 const router = Router()
 
@@ -24,6 +25,7 @@ router.use('/billing', billingRoutes)
 router.use('/analytics', analyticsRoutes)
 router.use('/agents', agentRoutes)
 router.use('/webhooks', webhookRoutes)
+router.use('/database', databaseRoutes)
 
 router.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }))
 
