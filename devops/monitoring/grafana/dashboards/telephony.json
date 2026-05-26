@@ -1,0 +1,9 @@
+﻿{
+  "title": "AI Telephony Platform",
+  "panels": [],
+  "__inputs": [],
+  "description": "Telephony platform monitoring dashboard - import and configure panels",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s"
+}

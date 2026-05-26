@@ -1,0 +1,42 @@
+﻿<!-- FreeSWITCH Default Dialplan -->
+<include>
+  <context name="default">
+
+    <!-- Outbound Calls via TATA Gateway -->
+    <extension name="outbound_calls">
+      <condition field="destination_number" expression="^(\+?[0-9]{10,15})$">
+        <action application="set" data="effective_caller_id_number=${outbound_caller_id}"/>
+        <action application="set" data="call_timeout=30"/>
+        <action application="set" data="record_session=/var/recordings/${uuid}.mp3"/>
+        <action application="bridge" data="sofia/gateway/tata/$1"/>
+      </condition>
+    </extension>
+
+    <!-- IVR Entry Point -->
+    <extension name="ivr_entry">
+      <condition field="destination_number" expression="^(IVR\d+)$">
+        <action application="answer"/>
+        <action application="sleep" data="1000"/>
+        <action application="ivr" data="$1"/>
+      </condition>
+    </extension>
+
+    <!-- Agent Extensions (1000-1999) -->
+    <extension name="agent_extensions">
+      <condition field="destination_number" expression="^(1[0-9]{3})$">
+        <action application="set" data="call_timeout=20"/>
+        <action application="bridge" data="sofia/internal/$1@${domain}"/>
+      </condition>
+    </extension>
+
+    <!-- Queue -->
+    <extension name="sales_queue">
+      <condition field="destination_number" expression="^9001$">
+        <action application="answer"/>
+        <action application="set" data="fifo_music=local_stream://moh"/>
+        <action application="fifo" data="sales_queue@${domain} in undef"/>
+      </condition>
+    </extension>
+
+  </context>
+</include>

@@ -1,0 +1,28 @@
+﻿<!-- FreeSWITCH External SIP Profile -->
+<profile name="external">
+  <gateways>
+    <!-- TATA SIP Trunk -->
+    <gateway name="tata">
+      <param name="username" value="YOUR_SIP_USERNAME"/>
+      <param name="password" value="YOUR_SIP_PASSWORD"/>
+      <param name="proxy" value="sip.tata.com"/>
+      <param name="register" value="true"/>
+      <param name="caller-id-in-from" value="false"/>
+      <param name="codec-prefs" value="PCMU,PCMA"/>
+    </gateway>
+  </gateways>
+  <settings>
+    <param name="user-agent-string" value="AI-Telephony-FS"/>
+    <param name="debug" value="0"/>
+    <param name="sip-port" value="5080"/>
+    <param name="dialplan" value="XML"/>
+    <param name="context" value="public"/>
+    <param name="rtp-timer-name" value="soft"/>
+    <param name="rtp-ip" value="auto"/>
+    <param name="sip-ip" value="auto"/>
+    <param name="hold-music" value="local_stream://moh"/>
+    <param name="codec-prefs" value="PCMU,PCMA,G729"/>
+    <param name="record-path" value="/var/recordings"/>
+    <param name="record-template" value="${caller_id_number}.${target_domain}.${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
+  </settings>
+</profile>

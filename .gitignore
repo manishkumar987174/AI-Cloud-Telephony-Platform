@@ -1,0 +1,41 @@
+﻿# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+/frontend/dist
+/frontend/build
+/backend/dist
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Docker volumes
+data/
+mongo-data/
+redis-data/
+
+# Recordings / uploads
+uploads/
+recordings/
+
+# Test coverage
+coverage/

@@ -1,0 +1,30 @@
+﻿const { Router } = require('express')
+const authRoutes = require('./auth.routes')
+const userRoutes = require('./user.routes')
+const campaignRoutes = require('./campaign.routes')
+const contactRoutes = require('./contact.routes')
+const callRoutes = require('./call.routes')
+const recordingRoutes = require('./recording.routes')
+const ivrRoutes = require('./ivr.routes')
+const billingRoutes = require('./billing.routes')
+const analyticsRoutes = require('./analytics.routes')
+const agentRoutes = require('./agent.routes')
+const webhookRoutes = require('./webhook.routes')
+
+const router = Router()
+
+router.use('/auth', authRoutes)
+router.use('/users', userRoutes)
+router.use('/campaigns', campaignRoutes)
+router.use('/contacts', contactRoutes)
+router.use('/calls', callRoutes)
+router.use('/recordings', recordingRoutes)
+router.use('/ivr', ivrRoutes)
+router.use('/billing', billingRoutes)
+router.use('/analytics', analyticsRoutes)
+router.use('/agents', agentRoutes)
+router.use('/webhooks', webhookRoutes)
+
+router.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }))
+
+module.exports = router
