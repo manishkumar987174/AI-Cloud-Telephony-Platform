@@ -1,10 +1,14 @@
-﻿const { Router } = require('express')
-const controller = require('../controllers/auth.controller')
-const { authenticate } = require('../middlewares/auth')
+const { Router } = require('express');
+const controller = require('../controllers/auth.controller');
+const { authenticate } = require('../middlewares/auth');
 
-const router = Router()
+const router = Router();
 
-// TODO: Add auth routes
-// router.get('/', authenticate, controller.getAll)
+router.post('/register', controller.register);
+router.post('/login', controller.login);
+router.get('/me', authenticate, controller.getCurrentUser);
 
-module.exports = router
+// Fallback compatibility route
+router.get('/', authenticate, controller.getAll);
+
+module.exports = router;

@@ -1,4 +1,4 @@
-﻿require('dotenv').config()
+require('dotenv').config()
 const app = require('./app')
 const { connectDB } = require('./config/database')
 const { connectRedis } = require('./config/redis')
@@ -12,7 +12,7 @@ async function start() {
   await connectDB()
   await connectRedis()
   const server = app.listen(PORT, () => {
-    logger.info(Server running on port )
+    logger.info(`Server running on port ${PORT}`)
   })
   initSocket(server)
   initESL()
